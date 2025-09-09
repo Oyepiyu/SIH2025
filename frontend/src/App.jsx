@@ -83,7 +83,12 @@ export default function App() {
           <div className="hero-content">
             <h3>Government of Sikkim</h3>
             <h1>Welcome to Monastery 360</h1>
-            <a href="#experience" className="explore-link">
+            <a
+              href="/explore"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="explore-link"
+            >
               Start Exploring <span className="arrow">→</span>
             </a>
           </div>
@@ -91,55 +96,54 @@ export default function App() {
       </section>
 
       {/* Experience Monasteries Section */}
-<section id="experience" className="monasteries-section">
-  <div className="container">
-    <h2>Experience Monasteries in Sikkim</h2>
-    <div className="monastery-row">
-      
-      {/* Card 1 */}
-      <div className="monastery-card">
-        <img src={monastery1} alt="Rumtek Monastery" />
-        <div className="overlay"></div>
-        <div className="info">
-          <h3>Rumtek Monastery</h3>
-          <p>
-            Known as the Dharma Chakra Centre, Rumtek is one of the largest
-            monasteries in Sikkim with stunning golden stupa and Tibetan
-            architecture.
-          </p>
+      <section id="experience" className="monasteries-section">
+        <div className="container">
+          <h2>Experience Monasteries in Sikkim</h2>
+          <div className="monastery-row">
+            
+            {/* Card 1 */}
+            <div className="monastery-card">
+              <img src={monastery1} alt="Rumtek Monastery" />
+              <div className="overlay"></div>
+              <div className="info">
+                <h3>Rumtek Monastery</h3>
+                <p>
+                  Known as the Dharma Chakra Centre, Rumtek is one of the largest
+                  monasteries in Sikkim with stunning golden stupa and Tibetan
+                  architecture.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="monastery-card">
+              <img src={monastery2} alt="Pemayangtse Monastery" />
+              <div className="overlay"></div>
+              <div className="info">
+                <h3>Pemayangtse Monastery</h3>
+                <p>
+                  This 300-year-old monastery overlooks the majestic Kanchenjunga
+                  ranges, offering a spiritual and scenic experience.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="monastery-card">
+              <img src={monastery3} alt="Tashiding Monastery" />
+              <div className="overlay"></div>
+              <div className="info">
+                <h3>Tashiding Monastery</h3>
+                <p>
+                  Situated atop a hill, Tashiding is famed for its holy water
+                  ceremony and peaceful surroundings that attract pilgrims year-round.
+                </p>
+              </div>
+            </div>
+
+          </div>
         </div>
-      </div>
-
-      {/* Card 2 */}
-      <div className="monastery-card">
-        <img src={monastery2} alt="Pemayangtse Monastery" />
-        <div className="overlay"></div>
-        <div className="info">
-          <h3>Pemayangtse Monastery</h3>
-          <p>
-            This 300-year-old monastery overlooks the majestic Kanchenjunga
-            ranges, offering a spiritual and scenic experience.
-          </p>
-        </div>
-      </div>
-
-      {/* Card 3 */}
-      <div className="monastery-card">
-        <img src={monastery3} alt="Tashiding Monastery" />
-        <div className="overlay"></div>
-        <div className="info">
-          <h3>Tashiding Monastery</h3>
-          <p>
-            Situated atop a hill, Tashiding is famed for its holy water
-            ceremony and peaceful surroundings that attract pilgrims year-round.
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* Plan Your Trip Section */}
       <section id="plan" className="plan-section">
@@ -171,7 +175,16 @@ export default function App() {
                   }
                 >
                   <h3>{card.title}</h3>
-                  {!card.special && <button className="explore-btn">Explore</button>}
+                  {!card.special && (
+                    <a
+                      href="/explore"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="explore-btn"
+                    >
+                      Explore
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
