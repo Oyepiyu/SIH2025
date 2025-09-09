@@ -7,6 +7,7 @@ import manuscript1 from "../assets/manuscript1.jpg";
 import manuscript2 from "../assets/manuscript2.jpg";
 import manuscript3 from "../assets/manuscript3.jpg";
 
+import { Link } from "react-router-dom";
 
 // Static data of monasteries (still for search bar popups)
 const monasteries = [
@@ -70,27 +71,33 @@ const Explore = () => {
   return (
     <div className="explore-page">
       {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <span className="small-text">experience</span>
-          <span className="brand">Monastery 360</span>
-        </div>
+     <nav className="navbar">
+  <div className="navbar-left">
+    <span className="small-text">experience</span>
+    <span className="brand">Monastery 360</span>
+  </div>
 
-        <div className="navbar-center">
-          <ul>
-            <li><a href="#explore-hero">Home</a></li>
-            <li><a href="#virtual-guide">Virtual Guide</a></li>
-            <li><a href="#travel-tools">Travel Tools</a></li>
-          </ul>
-        </div>
+  <div className="navbar-center">
+    <ul>
+      {/* ✅ Correct navigation */}
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/explore">Explore</Link></li>
 
-        <div className="navbar-right">
-          <button className="icon-btn" aria-label="Search">🔍</button>
-          <button className="icon-btn" aria-label="Saved">♡</button>
-          <button className="icon-btn" aria-label="Map">🗺️</button>
-          <button className="lang-btn" aria-label="Language">En</button>
-        </div>
-      </nav>
+      {/* ✅ New Manuscripts option (scrolls to section) */}
+      <li><a href="#manuscripts">Manuscripts</a></li>
+      <li><a href="#virtual-guide">Virtual Guide</a></li>
+      <li><a href="#travel-tools">Travel Guide</a></li>
+    </ul>
+  </div>
+
+  <div className="navbar-right">
+    <button className="icon-btn" aria-label="Search">🔍</button>
+    <button className="icon-btn" aria-label="Saved">♡</button>
+    <button className="icon-btn" aria-label="Map">🗺️</button>
+    <button className="lang-btn" aria-label="Language">En</button>
+  </div>
+</nav>
+
 
       {/* Section 1 (Hero + Search Bar) */}
       <section
@@ -228,7 +235,7 @@ const Explore = () => {
         </div>
       </section>
 
-      <section className="manuscripts-section">
+      <section className="manuscripts-section"  id="manuscripts">
   <h2 className="manuscripts-title">Manuscripts</h2>
 
   <div className="manuscript-cards">
