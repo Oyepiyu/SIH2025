@@ -5,6 +5,7 @@ import "./App.css";
 import heroImg from "./assets/sikkim-hero.jpg";
 
 // Monastery images
+import bgImage from "./assets/experience.jpeg";
 import monastery1 from "./assets/monastery1.jpg";
 import monastery2 from "./assets/monastery2.jpg";
 import monastery3 from "./assets/monastery3.jpg";
@@ -56,7 +57,7 @@ export default function App() {
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#experience">Experience</a></li>
-            <li><a href="/explore">Explore</a></li>
+            <li><a href="#explore">Explore</a></li>
             <li><a href="#things">Things to do</a></li>
             <li><a href="#where">Where to go</a></li>
             <li><a href="#events">Events</a></li>
@@ -96,7 +97,11 @@ export default function App() {
       </section>
 
       {/* Experience Monasteries Section */}
-      <section id="experience" className="monasteries-section">
+      <section
+  id="experience"
+  className="monasteries-section"
+  style={{ backgroundImage: `url(${bgImage})` }}
+>
         <div className="container">
           <h2>Experience Monasteries in Sikkim</h2>
           <div className="monastery-row">

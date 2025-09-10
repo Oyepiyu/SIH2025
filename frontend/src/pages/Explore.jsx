@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../App.css";
 import sikkimExploreImg from "../assets/sikkim-explore.jpg";
 import travelBg from "../assets/sikkim-background.jpg"; // ✅ background for Travel Tools
+import virtualguideBg from "../assets/virtualguide.jpeg"; // ✅ background for Virtual Guide
 
 import manuscript1 from "../assets/manuscript1.jpg";
 import manuscript2 from "../assets/manuscript2.jpg";
@@ -127,7 +128,7 @@ const Explore = () => {
       </section>
 
       {/* Section 2 (Virtual Guide) */}
-      <section id="virtual-guide" className="virtual-guide">
+      <section id="virtual-guide" className="virtual-guide" style={{ backgroundImage: `url(${virtualguideBg})` }}>
         <h2 className="guide-title">Virtual Guide</h2>
         <div className="guide-cards">
           {/* Card 1 */}
@@ -158,9 +159,14 @@ const Explore = () => {
                 brings legends, rituals, and history to life — synchronized with your virtual tour.
               </p>
             </div>
-            <div className="card-hover">
-              <button>Start Audio Guide</button>
-            </div>
+              <div className="card-hover">
+  <button
+    onClick={() => window.open("/audio-guide", "_blank")}
+  >
+    Start Audio Guide
+  </button>
+</div>
+
           </div>
         </div>
       </section>

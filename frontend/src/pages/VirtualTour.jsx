@@ -2,11 +2,23 @@ import React from "react";
 import monastery1 from "../assets/monastery1.jpg";
 import monastery2 from "../assets/monastery2.jpg";
 import monastery3 from "../assets/monastery3.jpg";
+import bgImage from "../assets/virtualtour.jpeg"; // ✅ import your background image
 import "../App.css"; // reuse styling
 
 const VirtualTour = () => {
   return (
-    <div className="virtual-tour-page">
+    <div
+      className="virtual-tour-page"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
+        padding: "2rem",
+        color: "black",
+      }}
+    >
       <h2 className="virtual-tour-title">Virtual Tour</h2>
 
       <div className="virtual-tour-cards">
