@@ -1297,3 +1297,20 @@ html {
   display: block;
 }
 
+/* Interactive Map page niceties */
+.interactive-map-page h2 {
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 1.8rem;
+  color: #111;
+}
+
+/* style popup text a bit */
+.leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* ensure marker images fit */
+.leaflet-popup-content img {
+  display: block;
+}

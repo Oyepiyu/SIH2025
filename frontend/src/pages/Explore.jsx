@@ -207,7 +207,9 @@ const Explore = () => {
               </p>
             </div>
             <div className="card-hover">
-              <button>Explore</button>
+              <button onClick={() => window.open("/interactive-map", "_blank")}>
+      Explore
+    </button>
             </div>
           </div>
 
@@ -329,6 +331,9 @@ const Explore = () => {
           </div>
         </div>
       )}
+      <footer className="footer">
+        <p>© 2025 Monastery360. All Rights Reserved.</p>
+      </footer>
     </div>
   );
 };

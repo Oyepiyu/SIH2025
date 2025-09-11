@@ -76,6 +76,7 @@ const AudioGuide = () => {
           <h3 className="card-title">Location Based Audio</h3>
         </div>
       </div>
+      
     </div>
   );
 };

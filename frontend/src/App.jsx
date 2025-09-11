@@ -57,7 +57,7 @@ export default function App() {
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#experience">Experience</a></li>
-            <li><a href="#explore">Explore</a></li>
+            <li><a href="/explore">Explore</a></li>
             <li><a href="#things">Things to do</a></li>
             <li><a href="#where">Where to go</a></li>
             <li><a href="#events">Events</a></li>

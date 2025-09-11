@@ -67,6 +67,7 @@ const VirtualTour = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

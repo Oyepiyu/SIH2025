@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import Explore from "./pages/Explore.jsx"; 
 import VirtualTour from "./pages/VirtualTour.jsx"; // ✅ Import new page
 import AudioGuide from "./pages/AudioGuide.jsx";
+import InteractiveMapPage from "./pages/InteractiveMapPage";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -21,6 +22,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/virtual-tour" element={<VirtualTour />} />
 
         <Route path="/audio-guide" element={<AudioGuide />} />
+
+        <Route path="/interactive-map" element={<InteractiveMapPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
