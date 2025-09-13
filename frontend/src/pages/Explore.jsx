@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 import sikkimExploreImg from "../assets/sikkim-explore.jpg";
 import travelBg from "../assets/sikkim-background.jpg"; // ✅ background for Travel Tools
@@ -35,6 +36,7 @@ const monasteries = [
 ];
 
 const Explore = () => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [result, setResult] = useState(null);
 
@@ -92,9 +94,9 @@ const Explore = () => {
   </div>
 
   <div className="navbar-right">
-    <button className="icon-btn" aria-label="Search">🔍</button>
+    <button className="icon-btn" aria-label="Search" onClick={() => navigate("/explore")}>🔍</button>
     <button className="icon-btn" aria-label="Saved">♡</button>
-    <button className="icon-btn" aria-label="Map">🗺️</button>
+    <button className="icon-btn" aria-label="Map" onClick={() => navigate("/interactive-map")}>🗺️</button>
     <button className="lang-btn" aria-label="Language">En</button>
   </div>
 </nav>
@@ -109,7 +111,7 @@ const Explore = () => {
         <div className="overlay">
           <div className="hero-content">
             <div className="explore-top-text">
-              <p>🌄 Discover the beauty of Sikkim with Monastery 360</p>
+              <p>Step inside the spiritual heart of Sikkim. Search monasteries, learn their stories, and experience their beauty — all in one place.”</p>
             </div>
 
             <div className="search-box">

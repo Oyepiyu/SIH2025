@@ -4,8 +4,10 @@ import monastery2 from "../assets/monastery2.jpg";
 import monastery3 from "../assets/monastery3.jpg";
 import bgImage from "../assets/virtualtour.jpeg"; // ✅ import your background image
 import "../App.css"; // reuse styling
+import { useNavigate } from "react-router-dom";
 
 const VirtualTour = () => {
+  const navigate = useNavigate();
   return (
     <div
       className="virtual-tour-page"
@@ -33,11 +35,11 @@ const VirtualTour = () => {
               architecture.
             </p>
             <button
-              className="tour-btn"
-              onClick={() => window.open("/rumtek-tour", "_blank")}
-            >
-              Start Virtual Tour
-            </button>
+  className="tour-btn"
+  onClick={() => navigate("/rumtek-tour")}
+>
+  Start Virtual Tour
+</button>
           </div>
         </div>
 

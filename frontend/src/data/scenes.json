@@ -1,0 +1,56 @@
+{
+  "defaultScene": "rumtek-entrance",
+  "scenes": {
+    "rumtek-entrance": {
+      "title": "Rumtek Monastery Entrance",
+      "image": "/rumtek-assets/rumtek1.jpg",
+      "info": "Welcome to the entrance of Rumtek Monastery, one of the most important monasteries in Sikkim.",
+      "hotspots": [
+        {
+          "id": "to-hall",
+          "icon": "/rumtek-assets/arrow-forward.svg",
+          "position": "2 1 -3",
+          "scale": "0.7 0.7 0.7",
+          "target": "rumtek-hall"
+        },
+        {
+          "id": "to-courtyard",
+          "icon": "/rumtek-assets/arrow-forward.svg",
+          "position": "-2 1 -3",
+          "scale": "0.7 0.7 0.7",
+          "target": "rumtek-courtyard"
+        }
+      ]
+    },
+
+    "rumtek-hall": {
+      "title": "Main Prayer Hall",
+      "image": "/rumtek-assets/rumtek2.jpg",
+      "info": "The main prayer hall of Rumtek Monastery is adorned with intricate murals and statues.",
+      "hotspots": [
+        {
+          "id": "back-to-entrance",
+          "icon": "/rumtek-assets/arrow-forward.svg",
+          "position": "0 1 3",
+          "scale": "0.7 0.7 0.7",
+          "target": "rumtek-entrance"
+        }
+      ]
+    },
+
+    "rumtek-courtyard": {
+      "title": "Monastery Courtyard",
+      "image": "/rumtek-assets/rumtek3.jpg",
+      "info": "The courtyard of Rumtek Monastery is where festivals and gatherings are held.",
+      "hotspots": [
+        {
+          "id": "back-to-entrance",
+          "icon": "/rumtek-assets/arrow-forward.svg",
+          "position": "1 1 2",
+          "scale": "0.7 0.7 0.7",
+          "target": "rumtek-entrance"
+        }
+      ]
+    }
+  }
+}

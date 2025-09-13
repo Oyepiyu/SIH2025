@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
+import { useNavigate } from "react-router-dom";
+
 
 // Hero image
 import heroImg from "./assets/sikkim-hero.jpg";
@@ -18,6 +20,7 @@ import monasteriesImg from "./assets/monasteries.jpg";
 import heritageImg from "./assets/heritage.jpg";
 
 export default function App() {
+  const navigate = useNavigate();
   const planCards = [
     { title: "Plan Your Visit", img: "", special: true },
     { title: "Packages", img: packagesImg },
@@ -58,8 +61,7 @@ export default function App() {
             <li><a href="#home">Home</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="/explore">Explore</a></li>
-            <li><a href="#things">Things to do</a></li>
-            <li><a href="#where">Where to go</a></li>
+            <li><a href="/virtual-tour">Virtual Tour</a></li>
             <li><a href="#events">Events</a></li>
             <li><a href="#plan">Plan your trip</a></li>
             <li><a href="#contact">Contact Us</a></li>
@@ -67,9 +69,9 @@ export default function App() {
         </div>
 
         <div className="navbar-right">
-          <button className="icon-btn" aria-label="Search">🔍</button>
+          <button className="icon-btn" aria-label="Search" onClick={() => navigate("/explore")}>🔍</button>
           <button className="icon-btn" aria-label="Saved">♡</button>
-          <button className="icon-btn" aria-label="Map">🗺️</button>
+         <button className="icon-btn" aria-label="Map" onClick={() => navigate("/interactive-map")}>🗺️</button>
           <button className="lang-btn" aria-label="Language">En</button>
         </div>
       </nav>
