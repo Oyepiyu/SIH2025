@@ -1315,3 +1315,15 @@ html {
 .leaflet-popup-content img {
   display: block;
 }
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem; /* make emoji bigger */
+  transition: transform 0.2s ease-in-out;
+}
+
+.icon-btn:hover {
+  transform: scale(1.2);
+}
