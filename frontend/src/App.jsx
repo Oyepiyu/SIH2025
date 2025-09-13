@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 
+
 // Hero image
 import heroImg from "./assets/sikkim-hero.jpg";
 
