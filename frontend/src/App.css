@@ -1,10 +1,27 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
+/* Smooth scrolling for all elements */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better scroll offset for fixed navbar */
+section[id] {
+  scroll-margin-top: 90px; /* Increased from 80px to account for navbar properly */
+}
+
+/* Ensure all anchor links work smoothly */
+a[href^="#"] {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
 /* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html, body, #root { height: 100%; }
+html, body { height: 100%; }
+#root { min-height: 100%; }
 body {
   font-family: 'Inter', sans-serif;
   background-color: #000;
@@ -23,8 +40,8 @@ html {
   top: 0;
   left: 0;
   width: 100%;
-  height: 72px;
-  padding: 0 50px;
+  height: 80px;  /* Consistent height - was 72px */
+  padding: 12px 50px;  /* Adjusted padding */
   display: flex;
   align-items: center;
   gap: 24px;
@@ -91,7 +108,7 @@ html {
 .hero .overlay {
   height: 100%;
   width: 100%;
-  padding-top: 72px;              /* navbar height */
+  padding-top: 80px;              /* Updated to match navbar height */
   background: rgba(0,0,0,0.40);   /* readable over photo */
   display: flex;
   align-items: center;
@@ -524,6 +541,68 @@ html {
 
 .contact-form button:hover {
   background: #1a252f;
+}
+
+/* Contact form status messages */
+.status-message {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.status-message.success {
+  background: rgba(40, 167, 69, 0.2);
+  border: 1px solid #28a745;
+  color: #28a745;
+}
+
+.status-message.error {
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.contact-form button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.contact-form button:disabled:hover {
+  background: #6c757d;
+}
+
+/* Textarea container for character count */
+.textarea-container {
+  position: relative;
+}
+
+.char-count {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: right;
+  margin-top: 5px;
+}
+
+/* Loading and Error States */
+.loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 20px;
+  font-size: 1rem;
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 5px;
+  margin: 10px 0;
 }
 
 /* Footer */

@@ -1,10 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUpload, FaMapMarkerAlt } from "react-icons/fa";
 import "../App.css";
 import bgImage from "../assets/Audio.jpeg"; // ✅ Import your background image
+import { audioGuideAPI } from "../utils/api";
 
 const AudioGuide = () => {
   const [location, setLocation] = useState("");
+  const [audioGuides, setAudioGuides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch audio guides from API
+  useEffect(() => {
+    const fetchAudioGuides = async () => {
+      try {
+        setLoading(true);
+        const response = await audioGuideAPI.getAll();
+        if (response.success && response.data) {
+          setAudioGuides(response.data);
+        }
+      } catch (err) {
+        console.error('Error fetching audio guides:', err);
+        setError('Failed to load audio guides');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAudioGuides();
+  }, []);
 
   return (
     <div

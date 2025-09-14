@@ -10,35 +10,58 @@ import manuscript2 from "../assets/manuscript2.jpg";
 import manuscript3 from "../assets/manuscript3.jpg";
 
 import { Link } from "react-router-dom";
-
-// Static data of monasteries (still for search bar popups)
-const monasteries = [
-  {
-    name: "Rumtek Monastery",
-    info: "Rumtek is one of the largest monasteries in Sikkim, known for its golden stupa and Tibetan architecture."
-  },
-  {
-    name: "Pemayangtse Monastery",
-    info: "Over 300 years old, Pemayangtse offers stunning views of Kanchenjunga and holds rich cultural history."
-  },
-  {
-    name: "Tashiding Monastery",
-    info: "Famous for its holy water ceremony, Tashiding is situated atop a hill offering peace and spirituality."
-  },
-  {
-    name: "Enchey Monastery",
-    info: "Located near Gangtok, Enchey is known for its sacredness and annual Cham dance festival."
-  },
-  {
-    name: "Phodong Monastery",
-    info: "Built in the 18th century, Phodong is a key monastery of the Kagyu sect, known for its vibrant murals."
-  }
-];
+import { monasteryAPI } from "../utils/api";
 
 const Explore = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [result, setResult] = useState(null);
+  const [monasteries, setMonasteries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch monasteries from API
+  useEffect(() => {
+    const fetchMonasteries = async () => {
+      try {
+        setLoading(true);
+        const response = await monasteryAPI.getAll();
+        if (response.success && response.data && response.data.monasteries) {
+          setMonasteries(response.data.monasteries);
+        }
+      } catch (err) {
+        console.error('Error fetching monasteries:', err);
+        setError('Failed to load monasteries');
+        // Fallback to static data if API fails
+        setMonasteries([
+          {
+            name: "Rumtek Monastery",
+            description: "Rumtek is one of the largest monasteries in Sikkim, known for its golden stupa and Tibetan architecture."
+          },
+          {
+            name: "Pemayangtse Monastery", 
+            description: "Over 300 years old, Pemayangtse offers stunning views of Kanchenjunga and holds rich cultural history."
+          },
+          {
+            name: "Tashiding Monastery",
+            description: "Famous for its holy water ceremony, Tashiding is situated atop a hill offering peace and spirituality."
+          },
+          {
+            name: "Enchey Monastery",
+            description: "Located near Gangtok, Enchey is known for its sacredness and annual Cham dance festival."
+          },
+          {
+            name: "Phodong Monastery", 
+            description: "Built in the 18th century, Phodong is a key monastery of the Kagyu sect, known for its vibrant murals."
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMonasteries();
+  }, []);
 
   // ✅ Smooth scrolling
   useEffect(() => {
@@ -62,11 +85,14 @@ const Explore = () => {
       (m) => m.name.toLowerCase() === query.toLowerCase()
     );
     if (found) {
-      setResult(found);
+      setResult({
+        name: found.name,
+        info: found.description || found.shortDescription || "No description available"
+      });
     } else {
       setResult({
         name: "Not Found",
-        info: "Monastery not found. Try Rumtek, Pemayangtse, Tashiding, Enchey, or Phodong."
+        info: "Monastery not found. Please try searching for available monasteries."
       });
     }
   };
@@ -86,10 +112,19 @@ const Explore = () => {
       <li><Link to="/">Home</Link></li>
       <li><Link to="/explore">Explore</Link></li>
 
-      {/* ✅ New Manuscripts option (scrolls to section) */}
-      <li><a href="#manuscripts">Manuscripts</a></li>
-      <li><a href="#virtual-guide">Virtual Guide</a></li>
-      <li><a href="#travel-tools">Travel Guide</a></li>
+      {/* ✅ Fixed anchor navigation with smooth scrolling */}
+      <li><a href="#manuscripts" onClick={(e) => { 
+        e.preventDefault(); 
+        document.getElementById('manuscripts')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      }}>Manuscripts</a></li>
+      <li><a href="#virtual-guide" onClick={(e) => { 
+        e.preventDefault(); 
+        document.getElementById('virtual-guide')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      }}>Virtual Guide</a></li>
+      <li><a href="#travel-tools" onClick={(e) => { 
+        e.preventDefault(); 
+        document.getElementById('travel-tools')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      }}>Travel Guide</a></li>
     </ul>
   </div>
 
