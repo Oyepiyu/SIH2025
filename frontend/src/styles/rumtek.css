@@ -1,9 +1,15 @@
-html, body {
+/* Only apply overflow hidden when rumtek tour is active */
+.rumtek-tour-page {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   margin: 0;
   overflow: hidden;
   background: #000;
+}
+
+.rumtek-tour-page,
+.rumtek-tour-page * {
+  overflow-x: hidden;
 }
 
 #ui {

@@ -2,9 +2,14 @@
 
 /* General page styling */
 html,
-body,
-#root {
+body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100%;
   margin: 0;
   padding: 0;
 }

@@ -38,7 +38,7 @@ const RumtekTour = () => {
   }
 
   return (
-    <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+    <div className="rumtek-tour-page" style={{ height: "100vh", width: "100%", position: "relative" }}>
       <a-scene
         embedded
         vr-mode-ui="enabled: false"
