@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { contactAPI, monasteryAPI } from "./utils/api";
 
 
 // Hero image
@@ -21,6 +22,81 @@ import heritageImg from "./assets/heritage.jpg";
 
 export default function App() {
   const navigate = useNavigate();
+  
+  // Contact form state
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    message: '',
+    subject: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
+
+  // Handle form input changes
+  const handleContactChange = (e) => {
+    setContactForm({
+      ...contactForm,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Handle form submission
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: '', message: '' });
+
+    // Client-side validation
+    if (contactForm.message.trim().length < 10) {
+      setSubmitStatus({ 
+        type: 'error', 
+        message: 'Message must be at least 10 characters long.' 
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (contactForm.name.trim().length < 2) {
+      setSubmitStatus({ 
+        type: 'error', 
+        message: 'Name must be at least 2 characters long.' 
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await contactAPI.submit({
+        name: contactForm.name.trim(),
+        email: contactForm.email.trim(),
+        message: contactForm.message.trim(),
+        subject: contactForm.subject.trim() || 'General Inquiry',
+        category: 'general'
+      });
+      
+      setSubmitStatus({ 
+        type: 'success', 
+        message: 'Thank you! Your message has been sent successfully.' 
+      });
+      
+      // Reset form
+      setContactForm({
+        name: '',
+        email: '',
+        message: '',
+        subject: ''
+      });
+    } catch (error) {
+      setSubmitStatus({ 
+        type: 'error', 
+        message: 'Failed to send message. Please try again.' 
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
   const planCards = [
     { title: "Plan Your Visit", img: "", special: true },
     { title: "Packages", img: packagesImg },
@@ -30,22 +106,44 @@ export default function App() {
     { title: "Cultural Heritage", img: heritageImg },
   ];
 
-  // Smooth scrolling for navbar
-  useEffect(() => {
-    const links = document.querySelectorAll("a[href^='#']");
-    links.forEach((link) => {
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute("href"));
-        if (target) {
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+  // Monastery data state
+  const [monasteries, setMonasteries] = useState([]);
+  const [monasteryLoading, setMonasteryLoading] = useState(true);
+
+  // Fetch monastery data
+  React.useEffect(() => {
+    const fetchMonasteries = async () => {
+      try {
+        const response = await monasteryAPI.getAll();
+        if (response.success && response.data && response.data.monasteries) {
+          setMonasteries(response.data.monasteries.slice(0, 3)); // Get first 3 monasteries for homepage
         }
-      });
-    });
+      } catch (error) {
+        console.error('Error fetching monasteries:', error);
+        // Use fallback static data
+        setMonasteries([
+          {
+            name: "Rumtek Monastery",
+            shortDescription: "Known as the Dharma Chakra Centre, Rumtek is one of the largest monasteries in Sikkim with stunning golden stupa and Tibetan architecture."
+          },
+          {
+            name: "Pemayangtse Monastery", 
+            shortDescription: "This 300-year-old monastery overlooks the majestic Kanchenjunga ranges, offering a spiritual and scenic experience."
+          },
+          {
+            name: "Tashiding Monastery",
+            shortDescription: "Situated atop a hill, Tashiding is famed for its holy water ceremony and peaceful surroundings that attract pilgrims year-round."
+          }
+        ]);
+      } finally {
+        setMonasteryLoading(false);
+      }
+    };
+
+    fetchMonasteries();
   }, []);
+
+  // Removed manual anchor scroll logic; handled by ScrollToTop and React Router
 
   return (
     <div className="homepage">
@@ -58,20 +156,33 @@ export default function App() {
 
         <div className="navbar-center">
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="/explore">Explore</a></li>
-            <li><a href="/virtual-tour">Virtual Tour</a></li>
-            <li><a href="#events">Events</a></li>
-            <li><a href="#plan">Plan your trip</a></li>
-            <li><a href="#contact">Contact Us</a></li>
+            <li><Link to="/">Home</Link></li>
+            <li><a href="#experience" onClick={(e) => { 
+              e.preventDefault(); 
+              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }}>Experience</a></li>
+            <li><Link to="/explore">Explore</Link></li>
+            <li><Link to="/virtual-tour">Virtual Tour</Link></li>
+            <li><a href="#events" onClick={(e) => { 
+              e.preventDefault(); 
+              // Events section doesn't exist, scroll to plan instead
+              document.getElementById('plan')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }}>Events</a></li>
+            <li><a href="#plan" onClick={(e) => { 
+              e.preventDefault(); 
+              document.getElementById('plan')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }}>Plan your trip</a></li>
+            <li><a href="#contact" onClick={(e) => { 
+              e.preventDefault(); 
+              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }}>Contact Us</a></li>
           </ul>
         </div>
 
         <div className="navbar-right">
           <button className="icon-btn" aria-label="Search" onClick={() => navigate("/explore")}>🔍</button>
           <button className="icon-btn" aria-label="Saved">♡</button>
-         <button className="icon-btn" aria-label="Map" onClick={() => navigate("/interactive-map")}>🗺️</button>
+          <button className="icon-btn" aria-label="Map" onClick={() => navigate("/interactive-map")}>🗺️</button>
           <button className="lang-btn" aria-label="Language">En</button>
         </div>
       </nav>
@@ -107,46 +218,28 @@ export default function App() {
         <div className="container">
           <h2>Experience Monasteries in Sikkim</h2>
           <div className="monastery-row">
+            {monasteries.map((monastery, index) => (
+              <div key={monastery._id || index} className="monastery-card">
+                <img src={index === 0 ? monastery1 : index === 1 ? monastery2 : monastery3} alt={monastery.name} />
+                <div className="overlay"></div>
+                <div className="info">
+                  <h3>{monastery.name}</h3>
+                  <p>{monastery.shortDescription || monastery.description}</p>
+                </div>
+              </div>
+            ))}
             
-            {/* Card 1 */}
-            <div className="monastery-card">
-              <img src={monastery1} alt="Rumtek Monastery" />
-              <div className="overlay"></div>
-              <div className="info">
-                <h3>Rumtek Monastery</h3>
-                <p>
-                  Known as the Dharma Chakra Centre, Rumtek is one of the largest
-                  monasteries in Sikkim with stunning golden stupa and Tibetan
-                  architecture.
-                </p>
+            {/* Fallback if no data */}
+            {!monasteryLoading && monasteries.length === 0 && (
+              <div className="monastery-card">
+                <img src={monastery1} alt="Monastery" />
+                <div className="overlay"></div>
+                <div className="info">
+                  <h3>Monasteries of Sikkim</h3>
+                  <p>Explore the spiritual heritage of Sikkim's ancient monasteries.</p>
+                </div>
               </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="monastery-card">
-              <img src={monastery2} alt="Pemayangtse Monastery" />
-              <div className="overlay"></div>
-              <div className="info">
-                <h3>Pemayangtse Monastery</h3>
-                <p>
-                  This 300-year-old monastery overlooks the majestic Kanchenjunga
-                  ranges, offering a spiritual and scenic experience.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="monastery-card">
-              <img src={monastery3} alt="Tashiding Monastery" />
-              <div className="overlay"></div>
-              <div className="info">
-                <h3>Tashiding Monastery</h3>
-                <p>
-                  Situated atop a hill, Tashiding is famed for its holy water
-                  ceremony and peaceful surroundings that attract pilgrims year-round.
-                </p>
-              </div>
-            </div>
+            )}
 
           </div>
         </div>
@@ -213,11 +306,54 @@ export default function App() {
           {/* Right Form */}
           <div className="contact-form">
             <h3>Send us a Message</h3>
-            <form>
-              <input type="text" placeholder="Your Name" required />
-              <input type="email" placeholder="Your Email" required />
-              <textarea placeholder="Your Message" rows="5" required></textarea>
-              <button type="submit">Send</button>
+            {submitStatus.message && (
+              <div className={`status-message ${submitStatus.type}`}>
+                {submitStatus.message}
+              </div>
+            )}
+            <form onSubmit={handleContactSubmit}>
+              <input 
+                type="text" 
+                name="name"
+                placeholder="Your Name" 
+                value={contactForm.name}
+                onChange={handleContactChange}
+                required 
+              />
+              <input 
+                type="email" 
+                name="email"
+                placeholder="Your Email" 
+                value={contactForm.email}
+                onChange={handleContactChange}
+                required 
+              />
+              <input 
+                type="text" 
+                name="subject"
+                placeholder="Subject (Optional)" 
+                value={contactForm.subject}
+                onChange={handleContactChange}
+              />
+              <div className="textarea-container">
+                <textarea 
+                  name="message"
+                  placeholder="Your Message (minimum 10 characters)" 
+                  rows="5" 
+                  value={contactForm.message}
+                  onChange={handleContactChange}
+                  required
+                ></textarea>
+                <div className="char-count">
+                  {contactForm.message.length}/10 characters minimum
+                </div>
+              </div>
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Sending...' : 'Send'}
+              </button>
             </form>
           </div>
         </div>
