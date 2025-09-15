@@ -80,6 +80,23 @@ export const audioGuideAPI = {
 
   // Get audio guides by language
   getByLanguage: (language) => apiRequest(`/audio-guides?language=${language}`),
+
+  // Smart Audio Guide: Image recognition
+  identifyLocation: (formData) => apiRequest('/audio-guides/identify', {
+    method: 'POST',
+    headers: {}, // Let browser set Content-Type for FormData
+    body: formData,
+  }),
+
+  // Smart Audio Guide: Location-based audio
+  getByLocation: (lat, lng, radius = 5000, language = 'en') => 
+    apiRequest(`/audio-guides/nearby?lat=${lat}&lng=${lng}&radius=${radius}&language=${language}`),
+
+  // Rate audio guide
+  rate: (id, rating) => apiRequest(`/audio-guides/${id}/rate`, {
+    method: 'POST',
+    body: JSON.stringify({ rating }),
+  }),
 };
 
 // Manuscript API functions

@@ -186,7 +186,218 @@ export const deleteAudioGuide = async (req, res, next) => {
   }
 };
 
-// Process image for audio guide (AI integration placeholder)
+// Identify location from uploaded image
+export const identifyLocationFromImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      throw new ApiError(400, 'No image file provided');
+    }
+
+    const imagePath = req.file.path;
+    
+    // Mock image recognition - replace with actual AI service (Google Vision API, AWS Rekognition, etc.)
+    const recognizedLocation = await mockImageRecognition(imagePath);
+    
+    if (!recognizedLocation) {
+      return res.status(404).json(new ApiResponse(404, null, 'Could not identify location from image'));
+    }
+
+    // Find audio guide for recognized location
+    const audioGuide = await AudioGuide.findOne({
+      monastery: recognizedLocation.monasteryId,
+      isActive: true
+    }).populate('monastery', 'name location shortDescription images');
+
+    if (!audioGuide) {
+      // Create a mock audio guide response for demonstration
+      const mockAudioResponse = {
+        title: `Discover ${recognizedLocation.name}`,
+        audioUrl: '/audio/rumtek-sample.mp3', // Use the sample audio file
+        duration: 120, // 2 minutes
+        description: `Learn about the rich history and cultural significance of ${recognizedLocation.name}, one of Sikkim's most important monasteries.`,
+        language: 'en',
+        monastery: {
+          name: recognizedLocation.name,
+          description: `A beautiful monastery in Sikkim with deep spiritual significance.`
+        },
+        recognizedLocation: recognizedLocation.name,
+        confidence: recognizedLocation.confidence,
+        isMockData: true
+      };
+
+      return res.status(200).json(new ApiResponse(200, mockAudioResponse, 'Location identified - sample audio provided'));
+    }
+
+    // Increment play count
+    await AudioGuide.findByIdAndUpdate(audioGuide._id, { $inc: { playCount: 1 } });
+
+    const responseData = {
+      title: audioGuide.title,
+      audioUrl: audioGuide.audioUrl,
+      duration: audioGuide.duration,
+      description: audioGuide.description,
+      language: audioGuide.language,
+      monastery: {
+        name: audioGuide.monastery.name,
+        description: audioGuide.monastery.shortDescription
+      },
+      recognizedLocation: recognizedLocation.name,
+      confidence: recognizedLocation.confidence
+    };
+
+    res.status(200).json(new ApiResponse(200, responseData, 'Location identified and audio guide found'));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get audio guides by user location
+export const getAudioGuidesByLocation = async (req, res, next) => {
+  try {
+    const { lat, lng, radius = 5000, language = 'en' } = req.query;
+
+    if (!lat || !lng) {
+      throw new ApiError(400, 'Latitude and longitude are required');
+    }
+
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lng);
+
+    if (isNaN(latitude) || isNaN(longitude)) {
+      throw new ApiError(400, 'Invalid latitude or longitude format');
+    }
+
+    // Find nearby monasteries using geospatial query
+    const nearbyMonasteries = await Monastery.find({
+      "location.coordinates": {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude]
+          },
+          $maxDistance: parseInt(radius)
+        }
+      }
+    });
+
+    if (nearbyMonasteries.length === 0) {
+      return res.status(404).json(new ApiResponse(404, null, 'No monasteries found nearby'));
+    }
+
+    // Find audio guides for nearby monasteries
+    const audioGuides = await AudioGuide.find({
+      monastery: { $in: nearbyMonasteries.map(m => m._id) },
+      language,
+      isActive: true
+    }).populate('monastery', 'name location shortDescription images');
+
+    if (audioGuides.length === 0) {
+      // Create a mock audio guide response for demonstration
+      const nearestMonastery = nearbyMonasteries[0];
+      const mockAudioResponse = {
+        title: `Discover ${nearestMonastery.name}`,
+        audioUrl: '/audio/rumtek-sample.mp3', // Use the sample audio file
+        duration: 120, // 2 minutes
+        description: `Learn about the rich history and cultural significance of ${nearestMonastery.name}, a beautiful monastery near your location.`,
+        language: language,
+        monastery: {
+          name: nearestMonastery.name,
+          description: nearestMonastery.shortDescription || `A beautiful monastery in Sikkim with deep spiritual significance.`,
+          coordinates: nearestMonastery.location.coordinates
+        },
+        distance: Math.round(calculateDistance(latitude, longitude, nearestMonastery.location.coordinates[1], nearestMonastery.location.coordinates[0])),
+        allNearbyGuides: 1,
+        isMockData: true
+      };
+
+      return res.status(200).json(new ApiResponse(200, mockAudioResponse, 'Nearby monastery found - sample audio provided'));
+    }
+
+    // Get the closest audio guide
+    const closestGuide = audioGuides[0];
+    const monasteryCoords = closestGuide.monastery.location.coordinates;
+    const distance = calculateDistance(latitude, longitude, monasteryCoords[1], monasteryCoords[0]);
+
+    // Increment play count
+    await AudioGuide.findByIdAndUpdate(closestGuide._id, { $inc: { playCount: 1 } });
+
+    const responseData = {
+      title: closestGuide.title,
+      audioUrl: closestGuide.audioUrl,
+      duration: closestGuide.duration,
+      description: closestGuide.description,
+      language: closestGuide.language,
+      monastery: {
+        name: closestGuide.monastery.name,
+        description: closestGuide.monastery.shortDescription,
+        coordinates: monasteryCoords
+      },
+      distance: Math.round(distance),
+      allNearbyGuides: audioGuides.length
+    };
+
+    res.status(200).json(new ApiResponse(200, responseData, 'Location-based audio guide found'));
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Mock image recognition function - replace with actual AI service
+const mockImageRecognition = async (imagePath) => {
+  // Simulate AI processing delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Try to find a matching monastery in database
+  const monasteries = await Monastery.find({});
+  
+  if (monasteries.length > 0) {
+    const randomMonastery = monasteries[Math.floor(Math.random() * monasteries.length)];
+    return {
+      name: randomMonastery.name,
+      monasteryId: randomMonastery._id,
+      confidence: 0.85 + Math.random() * 0.1 // Random confidence between 0.85-0.95
+    };
+  }
+
+  // Fallback mock results
+  const mockResults = [
+    { 
+      name: 'Rumtek Monastery', 
+      monasteryId: '507f1f77bcf86cd799439011',
+      confidence: 0.89
+    },
+    { 
+      name: 'Enchey Monastery', 
+      monasteryId: '507f1f77bcf86cd799439012',
+      confidence: 0.82
+    },
+    { 
+      name: 'Tashiding Monastery', 
+      monasteryId: '507f1f77bcf86cd799439013',
+      confidence: 0.75
+    }
+  ];
+
+  return mockResults[Math.floor(Math.random() * mockResults.length)];
+};
+
+// Distance calculation helper using Haversine formula
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371e3; // Earth radius in meters
+  const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+  const φ2 = lat2 * Math.PI/180;
+  const Δφ = (lat2-lat1) * Math.PI/180;
+  const Δλ = (lon2-lon1) * Math.PI/180;
+
+  const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c; // Distance in meters
+};
+
+// Process image for audio guide (AI integration placeholder) - DEPRECATED, use identifyLocationFromImage instead
 export const processImageForAudio = async (req, res, next) => {
   try {
     // This would integrate with AI service for image recognition
