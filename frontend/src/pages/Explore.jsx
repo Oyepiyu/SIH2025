@@ -133,8 +133,7 @@ const Explore = () => {
       <section id="virtual-guide" className="virtual-guide" style={{ backgroundImage: `url(${virtualguideBg})` }}>
         <h2 className="guide-title">Virtual Guide</h2>
         <div className="guide-cards">
-          {/* Card 1 */}
-          {/* Card 1 */}
+          {/* Card 1 */}  
 <div className="guide-card">
   <div className="card-content">
     <h3>Virtual Tour</h3>
