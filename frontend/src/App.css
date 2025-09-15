@@ -374,7 +374,7 @@ html {
 }
 
 .flip-card:hover .flip-inner {
-  transform: rotateY  (180deg);
+  transform: rotateY(180deg);
 }
 
 /* Front & Back */
